@@ -10,5 +10,5 @@ Clone this repository
 Create a new file called `secret.json`  
 Create a value called `token` and put your Bot User Token as the value.  
 Create a value called `MALUsername` and put your MyAnimeList username as the value.  
-Create a value called `MALPassword` and put your MyAnimeList password as the value.
+Create a value called `MALPassword` and put your MyAnimeList password as the value.  
 Run `bot.py`.
