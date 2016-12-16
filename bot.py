@@ -8,7 +8,10 @@ import requests
 from discord.ext import commands
 
 with open('secret.json') as data_file:
-    data = json.load(data_file)
+    secret = json.load(data_file)
+with open('config.json') as config:
+    config = json.load(config)
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -35,7 +38,7 @@ async def anime(ctx, *, anime_target: str):
     """Searches for an anime from MyAnimeList."""
     search_req = anime_target.replace(" ", "+")
     page = requests.get("https://myanimelist.net/api/anime/search.xml?q=" + search_req,
-                        auth=(data['MALUsername'], data['MALPassword']))
+                        auth=(secret['MALUsername'], secret['MALPassword']))
     results = ET.fromstring(page.content.decode("utf-8"))
     anime_embed = discord.Embed()
     descraw = results[0].find("synopsis").text
@@ -104,4 +107,17 @@ async def cool(ctx):
     cool.type = "rich"
     await bot.send_message(destination=ctx.message.channel, content=None, tts=False, embed=cool)
 
-bot.run(data['token'])
+
+@bot.command(pass_context=True)
+async def setgame(ctx, *, gamename: str):
+    """Sets the bot's game."""
+    if ctx.message.author.id == config['id']:
+        gamea = discord.Game()
+        gamea.name = gamename
+        await bot.change_presence(game=gamea)
+        await bot.say(":information_source: Changed game.")
+    else:
+        await bot.say(":warning: Cannot set game, invalid permissions.")
+
+
+bot.run(secret['token'])
