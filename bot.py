@@ -41,6 +41,7 @@ async def anime(ctx, *, anime_target: str):
                         auth=(secret['MALUsername'], secret['MALPassword']))
     results = ET.fromstring(page.content.decode("utf-8"))
     anime_embed = discord.Embed()
+    anime_embed.type = "rich"
     descraw = results[0].find("synopsis").text
     descnoquot = descraw.replace("&quot;", '"')
     descnobr = descnoquot.replace("<br />", "\n")
