@@ -6,7 +6,7 @@ import requests
 from discord.ext import commands
 
 
-class anime:
+class myanimelist:
     """Commands to get anime/manga from MyAnimeList."""
 
     def __init__(self, bot):
@@ -44,7 +44,12 @@ class anime:
         anime_embed.add_field(name="End Date", value=results[0].find("end_date").text)
         await self.bot.send_message(ctx.message.channel, embed=anime_embed)
 
+    @commands.command()
+    async def manga(self):
+        """This command is currently in-development."""
+        await self.bot.say(":warning: This feature is currently in-development and is disabled.")
+
 
 def setup(bot):
-    n = anime(bot)
+    n = myanimelist(bot)
     bot.add_cog(n)
