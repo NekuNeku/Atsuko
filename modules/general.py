@@ -5,12 +5,12 @@ from discord.ext import commands
 
 
 class general:
-    """No Commands"""
+    """General commands."""
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(description='Choose between two values.', pass_context=True)
+    @commands.command(pass_context=True)
     async def choose(self, ctx, left: str, right: str):
         """Chooses between two values."""
         choose_embed = discord.Embed()
@@ -19,7 +19,7 @@ class general:
         choose_embed.description = random.choice([left, right])
         await self.bot.send_message(destination=ctx.message.channel, tts=False, content=None, embed=choose_embed)
 
-    @commands.command(description='Ping command.', pass_context=True)
+    @commands.command(pass_context=True)
     async def ping(self, ctx):
         """Simple test."""
         pong = discord.Embed()

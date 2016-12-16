@@ -7,7 +7,7 @@ from discord.ext import commands
 
 
 class anime:
-    """No Commands"""
+    """Commands to get anime/manga from MyAnimeList."""
 
     def __init__(self, bot):
         self.bot = bot

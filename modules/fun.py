@@ -5,7 +5,7 @@ from discord.ext import commands
 
 
 class fun:
-    """No Commands"""
+    """This has fun commands."""
 
     def __init__(self, bot):
         self.bot = bot
