@@ -17,13 +17,3 @@ Run `bot.py`.
 
 # Commands  
 Run `+help` after Atsuko's joined and it will DM you the commands list.
-  
-# FAQ  
-**How do I get a 'Bot User Token'?**  
-Google it.  
-**Can I use a regular MyAnimeList account?**
-Yes.  
-**How do I get my User ID?**
-Run \@\<Insert Your Full Username Here> and it copy the **numbers.**
-**How do I invite my bot?**
-Google it.  
