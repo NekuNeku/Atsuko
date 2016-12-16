@@ -1,11 +1,11 @@
-import discord
-from discord.ext import commands
-import random
-import logging
-import spice_api as spice
-import requests
-import xml.etree.ElementTree as ET
 import json
+import logging
+import random
+import xml.etree.ElementTree as ET
+
+import discord
+import requests
+from discord.ext import commands
 
 with open('secret.json') as data_file:
     data = json.load(data_file)
@@ -30,31 +30,14 @@ async def on_ready():
     print('ID: ' + bot.user.id)
 
 
-@bot.command(description='Bot test.', pass_context=True)
-async def test(ctx, anime: str):
-    """Test command."""
-    auth = spice.init_auth("centralcommand", "$Wixoss04")
-    search_results = spice.search(anime, spice.get_medium('anime'), auth)
-    anime = discord.Embed()
-    anime.title = search_results[0].title
-    anime.type = "rich"
-    descraw = search_results[0].synopsis
-    descnoquot = descraw.replace("&quot;", '"')
-    descnobr = descnoquot.replace("<br />", "\n")
-    descnoi = descnobr.replace("[i]", "_")
-    descnoit = descnoi.replace("[/i]", "_")
-    descnodash = descnoit.replace("&#039;", "'")
-    descnodash = descnodash.replace("&mdash;", "—")
-    anime.description = descnodash
-    await bot.send_message(ctx.message.channel, content=None, tts=False, embed=anime)
-
-
 @bot.command(pass_context=True)
-async def anitest(ctx, anime: str):
-    search_req = anime.replace(" ", "+")
-    page = requests.get("https://myanimelist.net/api/anime/search.xml?q=" + search_req, auth=("centralcommand", "$Wixoss04"))
+async def anime(ctx, *, anime_target: str):
+    """Searches for an anime from MyAnimeList."""
+    search_req = anime_target.replace(" ", "+")
+    page = requests.get("https://myanimelist.net/api/anime/search.xml?q=" + search_req,
+                        auth=(data['MALUsername'], data['MALPassword']))
     results = ET.fromstring(page.content.decode("utf-8"))
-    anitest = discord.Embed()
+    anime_embed = discord.Embed()
     descraw = results[0].find("synopsis").text
     descnoquot = descraw.replace("&quot;", '"')
     descnobr = descnoquot.replace("<br />", "\n")
@@ -62,9 +45,19 @@ async def anitest(ctx, anime: str):
     descnoit = descnoi.replace("[/i]", "_")
     descnodash = descnoit.replace("&#039;", "'")
     descnodash = descnodash.replace("&mdash;", "—")
-    anitest.description = descnodash
-    anitest.title = results[0].find("title").text
-    await bot.send_message(ctx.message.channel, embed=anitest)
+    descnodash = descnodash.replace("&rsquo;", "'")
+    descfinal = descnodash.split("\n")
+    anime_embed.description = descfinal[0]
+    anime_embed.title = results[0].find("title").text + " (" + results[0].find("english").text + ")"
+    anime_embed.url = "https://myanimelist.net/anime/" + results[0].find("id").text
+    anime_embed.set_image(url=results[0].find("image").text)
+    anime_embed.set_footer(text="All information provided by the MyAnimeList API",
+                           icon_url="http://4.bp.blogspot.com/-lLUS5tswuGw/T5DyKdDDZPI/AAAAAAAACVU/N4dY03aXJNA/s1600/128.png")
+    anime_embed.add_field(name="Status", value=results[0].find("status").text)
+    anime_embed.add_field(name="Type", value=results[0].find("type").text)
+    anime_embed.add_field(name="Start Date", value=results[0].find("start_date").text)
+    anime_embed.add_field(name="End Date", value=results[0].find("end_date").text)
+    await bot.send_message(ctx.message.channel, embed=anime_embed)
 
 
 @bot.command(description='We are Number One!')
